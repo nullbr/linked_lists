@@ -56,13 +56,41 @@ class LinkedList
   end
 
   # pop removes the last element from the list
-  def pop; end
+  def pop(current_node = @head_node)
+    if @head_node == @tail_node
+      @head_node = nil
+      @tail_node = nil
+      return
+    elsif current_node.next_node == @tail_node
+      @tail_node = current_node
+      current_node.next_node = nil
+      return
+    end
+
+    pop(current_node.next_node)
+  end
 
   # contains?(value) returns true if the passed in value is in the list and otherwise returns false.
-  def contains?; end
+  def contains?(val, current_node = @head_node)
+    if current_node.value == val
+      true
+    elsif !current_node.next_node.nil?
+      contains?(val, current_node.next_node)
+    else
+      false
+    end
+  end
 
   # find(value) returns the index of the node containing value, or nil if not found.
-  def find(val); end
+  def find(val, current_node = @head_node, idx = 0)
+    if current_node.value == val
+      idx
+    elsif !current_node.next_node.nil?
+      find(val, current_node.next_node, idx + 1)
+    else
+      nil
+    end
+  end
 
   # to_s represent your LinkedList objects as strings, so you can print them out and preview them in the console.
   # The format should be: ( value ) -> ( value ) -> ( value ) -> nil
@@ -76,7 +104,17 @@ class LinkedList
   # EXTRA CREDIT
 
   # insert_at(value, index) that inserts a new node with the provided value at the given index.
-  def insert_at(val, index); end
+  def insert_at(val, index, current_node = @head_node, idx = 0)
+    if idx + 1 == index || index.zero?
+      new_node = Node.new(val, current_node.next_node)
+      current_node.next_node = new_node
+      return
+    elsif index >= size
+      return
+    end
+
+    insert_at(val, index, current_node.next_node, idx + 1)
+  end
 
   # remove_at(index) that removes the node at the given index.
   def remove_at(index); end
@@ -125,3 +163,26 @@ puts ''
 puts 'Print linked list item at index 0 and 2'
 p linked_list.at(0)
 p linked_list.at(1)
+
+puts ''
+puts 'Check if list contains a certain value'
+p linked_list.contains?(1)
+p linked_list.contains?(4)
+
+puts ''
+puts 'Remove the last element form list with pop'
+linked_list.pop
+linked_list.to_s
+
+puts ''
+puts 'Find node value and give its index or nil if none is found'
+p linked_list.find(3)
+p linked_list.find(1)
+p linked_list.find(2)
+
+puts ''
+puts 'Insert a value at a given index'
+linked_list.insert_at(4, 1)
+linked_list.insert_at(5, 2)
+linked_list.insert_at(6, 0)
+linked_list.to_s
