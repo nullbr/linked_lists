@@ -117,7 +117,19 @@ class LinkedList
   end
 
   # remove_at(index) that removes the node at the given index.
-  def remove_at(index); end
+  def remove_at(index, idx = 0, previous_node = nil, current_node = @head_node)
+    if index.zero?
+      @head_node = @head_node.next_node
+      return
+    elsif index == idx
+      previous_node.next_node = current_node.next_node
+      return
+    elsif index >= size
+      return
+    end
+
+    remove_at(index, idx + 1, current_node, current_node.next_node)
+  end
 
   # Extra Credit Tip: When you insert or remove a node, consider how it will affect the existing nodes.
   # Some of the nodes will need their #next_node link updated.
